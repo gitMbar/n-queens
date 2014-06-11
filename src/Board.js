@@ -139,13 +139,35 @@
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
     //
-    // test if a specific major diagonal on this board contains a conflict
+    // attempt to refactor to avoid wasting lookups
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      var x = majorDiagonalColumnIndexAtFirstRow;
+      var n = this.rows().length-1;
+      var total = 0;
+
+      for( var y=0; y < n; y++ ){
+        if(x >= 0 && x < n){
+          if(this.rows()[y][x] === 1){
+            total++;
+          }
+        }
+        if( total > 1 ){
+          return true;
+        }
+        x++;
+      }
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      var n = this.rows().length-1;
+
+      for( var i = -1*(n-1); i < n-1; i++){
+        if(this.hasMajorDiagonalConflictAt(i)){
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -156,11 +178,33 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+      var columnIndex = minorDiagonalColumnIndexAtFirstRow;
+      var n = this.rows().length-1;
+      var total = 0;
+
+      for( var row=0; row <= n; row++ ){
+        if(columnIndex >= 0 && columnIndex < n){//
+          if(this.rows()[row][columnIndex] === 1){
+            total++;
+          }
+        }
+        if( total > 1 ){
+          return true;
+        }
+        columnIndex--;
+      }
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      var n = this.rows().length-1;
+
+      for( var i = (n+n-1); i > 0; i--){
+        if(this.hasMinorDiagonalConflictAt(i)){
+          return true;
+        }
+      }
       return false; // fixme
     }
 
