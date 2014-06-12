@@ -146,7 +146,6 @@
       var total = 0;
 
       for( var row = 0; row <= n; row++ ){
-        console.log(row);
         if(this.rows()[row][column] === 1){
           total++;
         }

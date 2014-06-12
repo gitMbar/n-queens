@@ -14,7 +14,49 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  var solutionCount = 0; //fixme
+  var solution = new Board({n:n});
+
+
+  var makeArray = function(obj){
+    var results = [];
+    for(var i = 0; i < n; i++){
+      results.push(obj.rows()[i]);
+    }
+    return results;
+  };
+  solution = makeArray(solution);
+
+  var searchNext = function(depth, board){
+    //board.togglePiece(depth, column)
+    //debugger
+    depth++;
+      //for loop
+    for( var i=0; i < n && solutionCount < 1; i++){
+      //always toggle piece
+      board.togglePiece(depth, i);
+      //check for conflicts
+      if(board.hasAnyQueensConflicts()){
+        board.togglePiece(depth, i);
+      } else {
+      //find solutions
+        if(depth === n-1){
+          solutionCount++;
+          solution = makeArray(board);// Does not exist yet
+          //board.togglePiece(depth, i);
+        } else if (solutionCount < 1){
+          searchNext(depth, board);
+          board.togglePiece(depth, i);
+        }
+      }
+    }
+
+  };
+
+  var board = new Board({n:n});
+
+  searchNext(-1, board);
+
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -24,7 +66,15 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = 0; //fixme
+  var solutionCount = 0;
+
+  var checkConflicts = function(depth, i, board){
+    var fail = false;
+    if (board.hasRowConflictAt(depth) || board.hasColConflictAt(i)){
+      fail = true;
+    }
+    return fail;
+  };
 
   var searchNext = function(depth, board){
     //board.togglePiece(depth, column)
@@ -35,7 +85,7 @@ window.countNRooksSolutions = function(n) {
       //always toggle piece
       board.togglePiece(depth, i);
       //check for conflicts
-      if(board.hasAnyRooksConflicts()){
+      if(checkConflicts(depth, i, board)){
         board.togglePiece(depth, i);
       } else {
       //find solutions
@@ -63,8 +113,48 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  var solutionCount = 0; //fixme
+  var solution = new Board({n:n});
 
+
+  var makeArray = function(obj){
+    var results = [];
+    for(var i = 0; i < n; i++){
+      results.push(obj.rows()[i]);
+    }
+    return results;
+  };
+  solution = makeArray(solution);
+
+  var searchNext = function(depth, board){
+    //board.togglePiece(depth, column)
+    //debugger
+    depth++;
+      //for loop
+    for( var i=0; i < n && solutionCount < 1; i++){
+      //always toggle piece
+      board.togglePiece(depth, i);
+      //check for conflicts
+      if(board.hasAnyQueensConflicts()){
+        board.togglePiece(depth, i);
+      } else {
+      //find solutions
+        if(depth === n-1){
+          solutionCount++;
+          solution = makeArray(board);// Does not exist yet
+          //board.togglePiece(depth, i);
+        } else if (solutionCount < 1){
+          searchNext(depth, board);
+          board.togglePiece(depth, i);
+        }
+      }
+    }
+
+  };
+
+  var board = new Board({n:n});
+
+  searchNext(-1, board);
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
@@ -76,6 +166,14 @@ window.countNQueensSolutions = function(n) {
   if(n === 0){
     return 1;
   }
+
+  var checkConflicts = function(depth, i, board){
+    var fail = false;
+    if (board.hasAnyRowConflictsAt(depth) || board.hasAnyColumnConflicsAt(i)){
+      fail = true;
+    }
+    return fail;
+  };
 
   var searchNext = function(depth, board){
     //board.togglePiece(depth, column)
