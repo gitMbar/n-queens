@@ -169,7 +169,10 @@ window.countNQueensSolutions = function(n) {
 
   var checkConflicts = function(depth, i, board){
     var fail = false;
-    if (board.hasAnyRowConflictsAt(depth) || board.hasAnyColumnConflicsAt(i)){
+    if (board.hasRowConflictAt(depth) ||
+      board.hasColConflictAt(i) ||
+      board.hasMajorDiagonalConflictAt(i - depth) ||
+      board.hasMinorDiagonalConflictAt(i + depth)){
       fail = true;
     }
     return fail;
@@ -184,7 +187,7 @@ window.countNQueensSolutions = function(n) {
       //always toggle piece
       board.togglePiece(depth, i);
       //check for conflicts
-      if(board.hasAnyQueensConflicts()){
+      if(checkConflicts(depth, i, board)){
         board.togglePiece(depth, i);
       } else {
       //find solutions
