@@ -181,7 +181,6 @@ window.countNQueensSolutions = function(n) {
   var searchNext = function(depth, board){
     //board.togglePiece(depth, column)
     //debugger
-    depth++;
       //for loop
     for( var i=0; i < n; i++){
       //always toggle piece
@@ -195,7 +194,7 @@ window.countNQueensSolutions = function(n) {
           solutionCount++;
           board.togglePiece(depth, i);
         } else {
-          searchNext(depth, board);
+          searchNext(depth + 1, board);
           board.togglePiece(depth, i);
         }
       }
@@ -205,7 +204,7 @@ window.countNQueensSolutions = function(n) {
 
   var board = new Board({n:n});
 
-  searchNext(-1, board);
+  searchNext(0, board);
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
