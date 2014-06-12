@@ -141,20 +141,19 @@
     //
     // attempt to refactor to avoid wasting lookups
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      var x = majorDiagonalColumnIndexAtFirstRow;
+      var column = majorDiagonalColumnIndexAtFirstRow;
       var n = this.rows().length-1;
       var total = 0;
 
-      for( var y=0; y < n; y++ ){
-        if(x >= 0 && x < n){
-          if(this.rows()[y][x] === 1){
-            total++;
-          }
+      for( var row = 0; row <= n; row++ ){
+        console.log(row);
+        if(this.rows()[row][column] === 1){
+          total++;
         }
         if( total > 1 ){
           return true;
         }
-        x++;
+        column++;
       }
       return false; // fixme
     },
@@ -163,7 +162,7 @@
     hasAnyMajorDiagonalConflicts: function() {
       var n = this.rows().length-1;
 
-      for( var i = -1*(n-1); i < n-1; i++){
+      for( var i = -1*(n-1); i <= n-1; i++){
         if(this.hasMajorDiagonalConflictAt(i)){
           return true;
         }
@@ -183,10 +182,8 @@
       var total = 0;
 
       for( var row=0; row <= n; row++ ){
-        if(columnIndex >= 0 && columnIndex < n){//
-          if(this.rows()[row][columnIndex] === 1){
-            total++;
-          }
+        if(this.rows()[row][columnIndex] === 1){
+          total++;
         }
         if( total > 1 ){
           return true;

@@ -26,35 +26,24 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
   var solutionCount = 0; //fixme
 
-  var setZeros = function(depth, board){
-    var row = board.rows()[depth];
-    for (var i = 0; i < n; i++){
-      row[i] = 0;
-    }
-  };
-
   var searchNext = function(depth, board){
     //board.togglePiece(depth, column)
     //debugger
     depth++;
-
-    console.log(board)
       //for loop
     for( var i=0; i < n; i++){
+      //always toggle piece
       board.togglePiece(depth, i);
+      //check for conflicts
       if(board.hasAnyRooksConflicts()){
-        board.togglePiece(depth, i);//!
+        board.togglePiece(depth, i);
       } else {
-      //if there is a solution found, increment solution count and toggle off the piece just added
+      //find solutions
         if(depth === n-1){
           solutionCount++;
-        } else if(depth < n - 1){
+          board.togglePiece(depth, i);
+        } else {
           searchNext(depth, board);
-        }
-      }
-      if(i === n - 1 && depth > 0){
-        setZeros(depth-1, board)//this function doesnt exist YET
-        if (board.hasAnyRooksConflicts()){
           board.togglePiece(depth, i);
         }
       }
