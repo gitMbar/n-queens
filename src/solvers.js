@@ -162,11 +162,15 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = 0; //fixme
-  if(n === 0){
+  var solutionCount = 0;
+  //case of zero is nonsensical in the test,
+  //case of one is an edge case when starting at depth = 1
+  if(n === 0 || n === 1){
     return 1;
   }
 
+  //check conflics on each new toggle on
+  //i-depth and i+depth find the starting point for the diagonal tests
   var checkConflicts = function(depth, i, board){
     var fail = false;
     if (board.hasRowConflictAt(depth) ||
@@ -178,21 +182,22 @@ window.countNQueensSolutions = function(n) {
     return fail;
   };
 
+  //recursive function for checking each node
+  //in the decision tree
   var searchNext = function(depth, board){
-    //board.togglePiece(depth, column)
-    //debugger
-      //for loop
+    //iterate through columns
     for( var i=0; i < n; i++){
       //always toggle piece
       board.togglePiece(depth, i);
       //check for conflicts
       if(checkConflicts(depth, i, board)){
         board.togglePiece(depth, i);
+      //if there are no conflicts, check for a solution
       } else {
-      //find solutions
         if(depth === n-1){
           solutionCount++;
           board.togglePiece(depth, i);
+        //if there is no solution, continue down the branch
         } else {
           searchNext(depth + 1, board);
           board.togglePiece(depth, i);
@@ -201,10 +206,26 @@ window.countNQueensSolutions = function(n) {
     }
 
   };
-
+  //create a board object
   var board = new Board({n:n});
+  //search through the first half of the initial row
+  //search one extra if odd
+  for(var meta = 0; meta < Math.ceil(n/2); meta++){
+  //if n is odd, double solution count and seed the last starting value
+    if(n % 2 === 1 && meta === Math.floor(n/2)){
+      solutionCount = solutionCount * 2;
+    }
+    board.togglePiece(0, meta);
+    searchNext(1, board);
+    board.togglePiece(0, meta);
+  }
+  //if n is even, after the first half of the tree has run,
+  //double the solution count to optimize for the fact that
+  //a reflected board has the same starting solutions
+  if(n % 2 === 0){
+    solutionCount = solutionCount * 2;
+  }
 
-  searchNext(0, board);
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };

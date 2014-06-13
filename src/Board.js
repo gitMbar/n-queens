@@ -90,7 +90,6 @@
           return true;
         }
       }
-      console.log(00100010 & 11011110)
       return false; // true if conflict
     },
 
